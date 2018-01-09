@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+
+	<link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../node_modules/font-awesome/css/font-awesome.min.css">
+
+	<script>window.$ = window.jQuery = require('jquery');</script>
+	<script type="text/javascript" src="../node_modules/vue/dist/vue.js"></script>	
+	<script>window.Popper = require('poper');</script>
+	<script type="text/javascript" src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>	
+	<script type="text/javascript" src="index.js"></script>
+</head>
+<body>
+	<header class="navbar navbar-light bg-light">
+		<span class="navbar-brand"></span>
+	</header>
+	<article id="content" class="container mt-2">
+		<section class="row">
+			<div class="col form-inline">
+					<label class="mr-3" for="browse">.env file</label>
+					<input type="text" name="envPath" class="form-control form-control-sm" style="width:40%" />
+					<button name="browse" class="btn btn-sm btn-secondary mr-1"><i class="fa fa-search" aria-hidden="true"></i> Browse</button>
+					<button name="load" class="btn btn-sm btn-success mr-4"><i class="fa fa-upload" aria-hidden="true"></i> Load</button>
+					<button name="save" class="btn btn-sm btn-primary mr-4"><i class="fa fa-download" aria-hidden="true"></i> Save</button>
+					<button name="runConfig" class="btn btn-sm btn-success"><i class="fa fa-bolt" aria-hidden="true"></i> Run Laradock</button>		
+			</div>
+		</section>
+		<section class="row mt-4 mb-4">
+			<ol class="col-12" v-show="envData.text == ''">
+				<li>Click "Browse" and select .env file in laradock directory (or input file path)</li>
+				<li>Click "Load", to display enviroment values</li>
+				<li>Edit enviroment values</li>
+				<li>Click "Save", to save .env file</li>
+				<li>Click "Run Laradock", to exec docker-compose</li>
+				<li>Select container and click "Done", docker container start</li>
+			</ol>
+			<div class="col-12 form-inline mb-2" v-show="envData.text != ''">
+				<label class="mr-3" for="filter"><i class="fa fa-filter" aria-hidden="true"></i> Filter by variable name</label>
+				<input type="text" name="filter" class="form-control form-control-sm" style="width:30%" v-model="envData.filterText" />
+			</div>
+			<div class="col-12" id="properties">
+				<div class="card" v-for="(group,index) in envData.getFilteredGroups()">
+					<div class="card-header">
+						<a data-toggle="collapse" :href="'#' + group.getIdString()" role="button" aria-expanded="false">
+							{{ group.name }}
+						</a>
+					</div>
+					<div class="collapse" :id="group.getIdString()" :class="{ show: envData.filterText }">
+						<div class="card-body p-2" v-show="group.desc">
+							<pre class="small mb-0">{{ group.desc }}</pre>
+						</div>
+						<table class="table table-bordered mb-0">
+							<tbody>
+								<tr v-for="(field,index) in group.fields">
+									<td style="width:100px">{{ field.name }}</td>
+									<td>
+										<input class="form-control form-control-sm envValue" v-model="field.value">
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>				
+			</div>
+		</section>
+	</article>
+	<footer></footer>
+
+	<!-- Modal -->
+	<div class="modal fade" id="modelRun" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" id="modelTitleId">Select Containers</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			  			<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<ul v-for="(container,index) in containers">
+						<li class="form-check">
+							<input type="checkbox" :id="'container_' + index" name="containers" :value="container" class="form-check-inout" />
+							<label class="form-check-label" :for="'container_' + index">{{ container }}</label>
+						</li>
+					</ul>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+					<button type="button" name="runDone" class="btn btn-primary">Done</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,20 @@
+{
+  "name": "laradock_configure",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main/main.js",
+  "dependencies": {
+    "bootstrap": "^4.0.0-beta.3",
+    "font-awesome": "^4.7.0",
+    "jquery": "^3.2.1",
+    "js-yaml": "^3.10.0",
+    "poper": "^0.1.1",
+    "vue": "^2.5.13"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "kamukiriri",
+  "license": "Apache-2.0"
+}
